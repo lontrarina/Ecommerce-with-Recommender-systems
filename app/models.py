@@ -21,6 +21,14 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+    
     
 class InteractionHistory(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=False)
@@ -28,8 +36,7 @@ class InteractionHistory(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        #return f"Customer: {self.customer.name}, Product: {self.product.name}"
-        return str(self.id)
+        return f"Customer: {self.customer.name}, Product: {self.product.name}"
     
 
 
@@ -37,7 +44,19 @@ class Cart(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
-        return str(self.id)
+        return f"Cart owner: {self.customer.name}"
+    
+    @property
+    def get_cart_total(self): 
+        cartitems = self.cartitem_set.all()
+        total = sum([item.get_total for item in cartitems])
+        return total
+    
+    @property
+    def get_cart_items(self):
+        cartitems = self.cartitem_set.all()
+        total = sum([item.quantity for item in cartitems])
+        return total
     
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=False)
@@ -46,17 +65,22 @@ class CartItem(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.id)
+        return f"Cart owner: {self.cart.customer.name}, Product: {self.product.name}"
+    
+    @property
+    def get_total(self):
+        total = self.product.price * self.quantity
+        return total
 
 class Wishlist(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
-        return str(self.id)
+        return f"Wishlist owner: {self.customer.name}"
     
 class WishlistItem(models.Model):
     wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, null=False)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
-        return str(self.id)
+        return f"WWishlist owner: {self.wishlist.customer.name}, Product: {self.product.name}"
