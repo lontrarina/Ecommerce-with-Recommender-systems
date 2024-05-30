@@ -16,8 +16,7 @@ class Product(models.Model):
     category = models.CharField(max_length=50)
     season= models.CharField(max_length=50)
     styles= models.CharField(max_length=70) # boho\classic\sporty\casual
-
-   # image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -35,7 +34,7 @@ class InteractionHistory(models.Model):
 
 
 class Cart(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, unique=True, null=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return str(self.id)
@@ -50,7 +49,7 @@ class CartItem(models.Model):
         return str(self.id)
 
 class Wishlist(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, unique=True, null=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return str(self.id)

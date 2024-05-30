@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from  .models import *
 
-def all_users(request):
-    return HttpResponse("Return all users!")
-# Create your views here.
 
 def app(request):
-    context = {}
+    products = Product.objects.all()
+    context = { 'products': products}
     return render(request, 'app/app.html', context)
 
 
