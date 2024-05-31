@@ -3,9 +3,9 @@
 {% block content %}
     <div class="row">
         {% for product in products %}
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <img class="thumbnail" src="{{product.imageURL}}">
-            <div class="box-element product">
+            <div class="box-element-app product">
                 <h6><strong>{{product.name}}</strong></h6>
                 <hr>
                 
@@ -13,7 +13,9 @@
                 <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
                 <button data-product={{product.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
   
-                <h4 style="display: inline-block; float: right"><strong>${{product.price}}</strong></h4>
+                <br><br>
+                <h4 style="display: inline-block; float: left"><strong>${{product.price}}</strong></h4>
+
         
             </div>
         </div>
