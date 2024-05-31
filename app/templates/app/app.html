@@ -10,7 +10,9 @@
                 <hr>
                 
                 <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
-                <a class="btn btn-outline-success" href="#">View</a>
+                <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
+                <button data-product={{product.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
+  
                 <h4 style="display: inline-block; float: right"><strong>${{product.price}}</strong></h4>
         
             </div>

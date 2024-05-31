@@ -4,11 +4,11 @@ body{
 }
 
 h1,h2,h3,h4,h5,h6{
-	color:hsl(0, 0%, 30%);
+	color:hsl(0, 7%, 11%);
 }
 
 .box-element{
-	box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+	box-shadow:hsl(0, 1%, 28%) 0 0 16px;
 	background-color: #fff;
 	border-radius: 4px;
 	padding: 10px;
@@ -22,12 +22,21 @@ h1,h2,h3,h4,h5,h6{
     box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
 }
 
+.thumbnail-detail {
+    width: 282px;
+    height: 423px;
+    -webkit-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    -moz-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+	margin-left: 200px;
+}
+
 .product{
 	border-radius: 0 0 4px 4px;
 }
 
 .bg-dark{
-	background-color: #4f868c!important;
+	background-color: #e0adce!important;
 }
 
 #cart-icon{
@@ -77,7 +86,7 @@ h1,h2,h3,h4,h5,h6{
     align-items: flex-stretch;
     padding-bottom: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid #ececec;
+    border-bottom: 1px solid #222020;
 
 }
 
@@ -104,4 +113,56 @@ h1,h2,h3,h4,h5,h6{
 
 .hidden{
 	display: none!important;
+}
+
+
+.wishlist-link{
+	color:black;
+	size: 20px;
+}
+
+.wishlist-link {
+    text-transform: uppercase;
+	font-size: 20px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+	float: left
+}
+.wishlist-link:hover {
+    color: #e15eb3; /* Додатковий колір при наведенні, за бажанням */
+}
+
+.nav-link {
+	font-style: italic;
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+}
+.navbar-brand{
+	font-style: italic;
+	font-weight: bold;
+	font-size: 25px;
+	color: rgb(121, 0, 81);
+	margin-left: 15px;
+	
+}
+
+.blog .carousel-indicators {
+	left: 0;
+	top: auto;
+    bottom: -40px;
+
+}
+
+/* The colour of the indicators */
+.blog .carousel-indicators li {
+    background: #a3a3a3;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+}
+
+.blog .carousel-indicators .active {
+background: #707070;
 }

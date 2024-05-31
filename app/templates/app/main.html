@@ -37,18 +37,23 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'app' %}">Store (App) <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'app' %}"> <span class="sr-only"> (Hi, {{customer.name}})</span></a>
             </li>
-            
           </ul>
         </div>
           <div class="form-inline my-2 my-lg-0">
-                <a href="#"class="btn btn-warning">Login</a>
-                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-warning">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-success">Register</a>
+                {% endif %}
+                <a href="{% url 'wishlist' %}" class="btn btn-info">Wishlist</a>
                 <a href="{% url 'cart' %}">
                 <img  id="cart-icon" src="{% static 'images/cart.png' %}">
             </a>
             <p id="cart-total">{{cartItems}}</p>
+            
             </div>
       </nav>
 
@@ -61,6 +66,8 @@
          </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>     
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>  
+    <script type="text/javascript" src="{% static 'js/wishlist.js' %}"></script>  
+    <script type="text/javascript" src="{% static 'js/carousel.js' %}"></script> 
   </body>
 </html>

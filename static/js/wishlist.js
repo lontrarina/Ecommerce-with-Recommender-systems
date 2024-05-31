@@ -1,7 +1,7 @@
-var updateBtns = document.getElementsByClassName('update-cart')
+var likeBtns = document.getElementsByClassName('like-btn')
 
-for (var i = 0; i < updateBtns.length; i++) {
-    updateBtns[i].addEventListener('click', function () {
+for (var i = 0; i < likeBtns.length; i++) {
+    likeBtns[i].addEventListener('click', function () {
         var productId = this.dataset.product
         var action = this.dataset.action
         console.log('productId:', productId, 'Action:', action)
@@ -10,16 +10,15 @@ for (var i = 0; i < updateBtns.length; i++) {
         if (user === 'AnonymousUser') {
             console.log('Not logged in')
         } else {
-            updateUserCart(productId, action)
+            updateUserWishlist(productId, action)
         }
     })
-} 
+}
 
-
-function updateUserCart(productId, action) {
+function updateUserWishlist(productId, action) {
     console.log('User is authenticated, sending data...')
 
-    var url = '/update_item/'
+    var url = '/update_wishlist/'
 
     fetch(url, {
         method: 'POST',
