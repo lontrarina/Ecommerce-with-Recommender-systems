@@ -164,21 +164,36 @@ h1,h2,h3,h4,h5,h6{
 	
 }
 
-.blog .carousel-indicators {
-	left: 0;
-	top: auto;
-    bottom: -40px;
+ /* Додаткові стилі можна описати тут */
+ .slider img {
+	max-width: 100%;
+	height: auto;
+  }
 
+.content {
+	margin: auto;
+	padding: 30px;
+	width: 100%;
+	max-width: 1500px;
+	box-sizing: border-box;
 }
 
-/* The colour of the indicators */
-.blog .carousel-indicators li {
-    background: #a3a3a3;
-    border-radius: 50%;
-    width: 8px;
-    height: 8px;
+.slider-margin{
+	margin-right: 10px;
 }
 
-.blog .carousel-indicators .active {
-background: #707070;
+.slick-prev, .slick-next {
+	background-color: #f1c4c4; /* Задайте бажаний колір */
+	border: none; /* Вилучіть рамку */
+	color: white; /* Задайте колір тексту */
+	border-radius: 50%; /* Зробіть кнопки круглими */
+}
+  
+.slick-prev:hover, .slick-next:hover {
+	background-color: #e13d82; /* Задайте колір при наведенні */
+}
+  
+.slick-prev:before, .slick-next:before {
+	color: rgb(247, 140, 224); /* Задайте колір стрілок */
+	font-size: 20px; /* Збільште розмір стрілок */
 }
