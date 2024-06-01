@@ -1,0 +1,26 @@
+<!-- app/search_results.html -->
+{% extends 'app/main.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <h1>Search Results:</h1> <br> <br>
+        {% if products_results %}
+            {% for product in products_results %}
+                <div class="col-lg-3">
+                    <img class="thumbnail" src="{{product.imageURL}}">
+                    <div class="box-element-app product">
+                        <h6><strong>{{product.name}}</strong></h6>
+                        <hr>
+                        <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                        <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
+                        <button data-product={{product.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
+                        <br><br>
+                        <h4 style="display: inline-block; float: left"><strong>${{product.price}}</strong></h4>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No products found.</p>
+        {% endif %}
+    </div>
+{% endblock content %}

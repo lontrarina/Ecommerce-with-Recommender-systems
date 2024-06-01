@@ -21,7 +21,7 @@
 <div class="content">
     <div class="slider multiple-items">
         {% for product in all_products %}
-        <div class="slider-margin"><img src="{{ product.imageURL }}" alt="Image {{ forloop.counter }}"></div>
+        <div class="slider-margin"><a href="{% url 'product_detail' product.id %}"><img src="{{ product.imageURL }}" alt="Image {{ forloop.counter }}"></a></div>
         {% endfor %}
     </div>
 </div>
@@ -32,7 +32,7 @@
 <div class="content">
     <div class="slider multiple-items">
         {% for product in all_products %}
-        <div class="slider-margin"><img src="{{ product.imageURL }}" alt="Image {{ forloop.counter }}"></div>
+        <div class="slider-margin"><a href="{% url 'product_detail' product.id %}">  <img src="{{ product.imageURL }}" alt="Image {{ forloop.counter }}"> </a></div>
         {% endfor %}
     </div>
 </div>

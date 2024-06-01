@@ -5,7 +5,7 @@ $(document).ready(function(){
       infinite: true,
       speed: 500,
       slidesToShow: 5,
-      slidesToScroll: 2
+      slidesToScroll: 1
       
     });
 });

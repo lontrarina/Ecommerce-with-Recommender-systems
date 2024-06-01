@@ -9,6 +9,7 @@ from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .utils import get_similar_products
+from fuzzywuzzy import process
 
 def app(request):
     customer=None
@@ -184,3 +185,43 @@ def update_wishlist(request):
     wishlist_item.save()
 
     return JsonResponse('Item was added', safe=False)
+
+# SEARCH----------------------------------------------------------------------------------------------------
+def search(request):
+    query = request.GET.get('q')
+    products_results = []
+
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        cart, created = Cart.objects.get_or_create(customer=customer)
+        cartItems = cart.get_cart_items
+    else:
+        cart = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = cart['get_cart_items']
+
+    if query:
+        products = Product.objects.all()
+        product_names = [product.name for product in products]
+        results = process.extract(query, product_names, limit=10)
+        
+        # Встановлюємо вищий поріг для фільтрації слабких збігів
+        threshold = 70
+        matched_product_ids = []
+        
+        for result in results:
+            if result[1] >= threshold:
+                matched_product = Product.objects.filter(name__icontains=result[0]).first()
+                if matched_product:
+                    matched_product_ids.append(matched_product.id)
+        
+        products_results = Product.objects.filter(id__in=matched_product_ids)
+    else:
+        products_results = Product.objects.all()
+
+    context = {
+        'products_results': products_results,
+        'cartItems': cartItems,
+        'customer':customer
+    }
+
+    return render(request, 'app/search_results.html', context)
