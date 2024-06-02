@@ -197,3 +197,42 @@ h1,h2,h3,h4,h5,h6{
 	color: rgb(247, 140, 224); /* Задайте колір стрілок */
 	font-size: 20px; /* Збільште розмір стрілок */
 }
+
+
+
+/* Загальні стилі для форм ---------------------------------*/
+form.login-form, form.register-form {
+    background-color: #f8d7da; /* Блідо-рожевий фон */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 1000px;
+}
+
+form.login-form h2, form.register-form h2 {
+    color: #721c24; /* Темніший відтінок для заголовка */
+}
+
+form.login-form .btn-primary, form.register-form .btn-primary {
+    background-color: #f5c6cb; /* Світло-рожевий колір для кнопки */
+    border: none;
+    color: #721c24; /* Темніший відтінок для тексту на кнопці */
+}
+
+form.login-form .btn-primary:hover, form.register-form .btn-primary:hover {
+    background-color: #f1b0b7; /* Трохи темніший відтінок при наведенні */
+}
+
+form.login-form input[type="text"], form.login-form input[type="password"],
+form.register-form input[type="text"], form.register-form input[type="password"],
+form.register-form input[type="email"] {
+    border: 1px solid #f5c6cb; /* Світло-рожевий колір обрамлення */
+    border-radius: 5px;
+}
+
+form.login-form input[type="text"]:focus, form.login-form input[type="password"]:focus,
+form.register-form input[type="text"]:focus, form.register-form input[type="password"]:focus,
+form.register-form input[type="email"]:focus {
+    border-color: #f1b0b7; /* Трохи темніший відтінок при фокусі */
+    box-shadow: 0 0 5px rgba(245, 198, 203, 0.5);
+}
