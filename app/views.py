@@ -92,7 +92,9 @@ def updateItem(request):
 def product_detail(request, id):
     customer=None
     product = get_object_or_404(Product, id=id)
-    similar_products = get_similar_products(product)
+    similar_products_content = get_similar_products_content_based(product)
+    similar_products_tfidf = get_similar_produc_tfidf(product)
+
 
     if request.user.is_authenticated:
         customer = request.user.customer
@@ -107,7 +109,8 @@ def product_detail(request, id):
     context = {
         'product': product,
         'all_products': all_products,
-        'related_products': similar_products,
+        'related_products': similar_products_content,
+        'related_products_tfidf': similar_products_tfidf,
         'cartItems': cartItems,
         'customer':customer
     }

@@ -31,8 +31,8 @@
 <!-- Додаємо карусель -->
 <div class="content">
     <div class="slider multiple-items">
-        {% for product in all_products %}
-        <div class="slider-margin"><a href="{% url 'product_detail' product.id %}">  <img src="{{ product.imageURL }}" alt="Image {{ forloop.counter }}"> </a></div>
+        {% for rel_tfidf in related_products_tfidf %}
+        <div class="slider-margin"><a href="{% url 'product_detail' rel_tfidf.id %}">  <img src="{{ rel_tfidf.imageURL }}" alt="Image {{ forloop.counter }}"> </a></div>
         {% endfor %}
     </div>
 </div>
