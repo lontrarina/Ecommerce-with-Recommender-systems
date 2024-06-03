@@ -8,7 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .utils import get_similar_products
+from .utils import *
 from fuzzywuzzy import process
 
 def app(request):
@@ -92,7 +92,7 @@ def updateItem(request):
 def product_detail(request, id):
     customer=None
     product = get_object_or_404(Product, id=id)
-    related_products = get_similar_products(product)
+    similar_products = get_similar_products(product)
 
     if request.user.is_authenticated:
         customer = request.user.customer
@@ -107,7 +107,7 @@ def product_detail(request, id):
     context = {
         'product': product,
         'all_products': all_products,
-        'related_products': related_products,
+        'related_products': similar_products,
         'cartItems': cartItems,
         'customer':customer
     }
@@ -116,6 +116,9 @@ def product_detail(request, id):
 # AUTHORIZATION----------------------------------------------------------------------------------------------------
 
 def login_view(request):
+    cart = {'get_cart_total': 0, 'get_cart_items': 0}
+    cartItems = cart['get_cart_items']
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -127,9 +130,12 @@ def login_view(request):
                 return redirect('app')
     else:
         form = AuthenticationForm()
-    return render(request, 'app/login.html', {'form': form})
+    return render(request, 'app/login.html', {'form': form, 'cartItems': cartItems})
 
 def register_view(request):
+    cart = {'get_cart_total': 0, 'get_cart_items': 0}
+    cartItems = cart['get_cart_items']
+    
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -139,7 +145,7 @@ def register_view(request):
             return redirect('app')
     else:
         form = RegisterForm()
-    return render(request, 'app/register.html', {'form': form})
+    return render(request, 'app/register.html', {'form': form, 'cartItems': cartItems})
 
 def logout_view(request):
     logout(request)
@@ -151,16 +157,21 @@ def logout_view(request):
 def wishlist(request):
     wishlist = None
     customer=None
+
     if request.user.is_authenticated:
         customer = request.user.customer
         wishlist, created = Wishlist.objects.get_or_create(customer=customer)
         items = wishlist.wishlistitem_set.all()
+        cart, created = Cart.objects.get_or_create(customer=customer)
+        cartItems = cart.get_cart_items
         message=""
     else:
         items = []
+        cart = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = cart['get_cart_items']
         message="Please login to use wishlist"
 
-    context = { 'items': items, 'wishlist': wishlist, 'customer':customer, 'message':message}
+    context = { 'items': items, 'wishlist': wishlist, 'customer':customer, 'message':message, 'cartItems': cartItems,}
     return render(request, 'app/wishlist.html', context)
 
 
@@ -188,6 +199,7 @@ def update_wishlist(request):
 
 # SEARCH----------------------------------------------------------------------------------------------------
 def search(request):
+    customer=None
     query = request.GET.get('q')
     products_results = []
 

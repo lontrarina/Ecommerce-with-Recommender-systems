@@ -20,8 +20,8 @@
 <!-- Додаємо карусель -->
 <div class="content">
     <div class="slider multiple-items">
-        {% for product in all_products %}
-        <div class="slider-margin"><a href="{% url 'product_detail' product.id %}"><img src="{{ product.imageURL }}" alt="Image {{ forloop.counter }}"></a></div>
+        {% for rel in related_products %}
+        <div class="slider-margin"><a href="{% url 'product_detail' rel.id %}"><img src="{{ rel.imageURL }}" alt="Image {{ forloop.counter }}"></a></div>
         {% endfor %}
     </div>
 </div>
