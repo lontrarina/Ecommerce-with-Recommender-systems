@@ -2,23 +2,60 @@
 {% load static %}
 {% block content %}
     <div class="row">
-        {% for product in products %}
-        <div class="col-lg-3">
-            <img class="thumbnail" src="{{product.imageURL}}">
-            <div class="box-element-app product">
-                <h6><strong>{{product.name}}</strong></h6>
-                <hr>
-                
-                <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
-                <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
-                <button data-product={{product.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
-  
-                <br><br>
-                <h4 style="display: inline-block; float: left"><strong>${{product.price}}</strong></h4>
-
-        
+        {% if customer %}
+            {% if Is_history %}
+                {% for rec in recommendations_NMF %}
+                <div class="col-lg-3">
+                    <img class="thumbnail" src="{{rec.imageURL}}">
+                    <div class="box-element-app product">
+                        <h6><strong>{{rec.name}}</strong></h6>
+                        <hr>
+                        
+                        <button data-product={{rec.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                        <a class="btn btn-outline-success" href="{% url 'product_detail' rec.id %}">View</a>
+                        <button data-product={{rec.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
+          
+                        <br><br>
+                        <h4 style="display: inline-block; float: left"><strong>${{rec.price}}</strong></h4>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                {% for product in products %}
+                <div class="col-lg-3">
+                    <img class="thumbnail" src="{{product.imageURL}}">
+                    <div class="box-element-app product">
+                        <h6><strong>{{product.name}}</strong></h6>
+                        <hr>
+                        
+                        <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                        <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
+                        <button data-product={{product.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
+          
+                        <br><br>
+                        <h4 style="display: inline-block; float: left"><strong>${{product.price}}</strong></h4>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            {% for product in products %}
+            <div class="col-lg-3">
+                <img class="thumbnail" src="{{product.imageURL}}">
+                <div class="box-element-app product">
+                    <h6><strong>{{product.name}}</strong></h6>
+                    <hr>
+                    
+                    <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                    <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
+                    <button data-product={{product.id}} data-action="add" method="POST" class="btn btn-outline-primary like-btn">Like</button>
+      
+                    <br><br>
+                    <h4 style="display: inline-block; float: left"><strong>${{product.price}}</strong></h4>
+    
+            
+                </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        {% endif %}
 {% endblock content %}

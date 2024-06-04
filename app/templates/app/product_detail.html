@@ -16,7 +16,7 @@
     </div>
 </div>
 <br> <br>
-<h1 style="margin-left: 40px;">Related Products</h1>
+<h1 style="margin-left: 40px;">Products with similar styles:</h1>
 <!-- Додаємо карусель -->
 <div class="content">
     <div class="slider multiple-items">
@@ -27,7 +27,7 @@
 </div>
 
 <br> <br>
-<h1 style="margin-left: 40px;">Related Products</h1>
+<h1 style="margin-left: 40px;">Similar Products:</h1>
 <!-- Додаємо карусель -->
 <div class="content">
     <div class="slider multiple-items">
@@ -36,7 +36,18 @@
         {% endfor %}
     </div>
 </div>
-{% endblock content %}
 
+
+<br> <br>
+<h1 style="margin-left: 40px;">Other customers also buy::</h1>
+<!-- Додаємо карусель -->
+<div class="content">
+    <div class="slider multiple-items">
+        {% for coll in related_products_collaborative %}
+        <div class="slider-margin"><a href="{% url 'product_detail' coll.id %}">  <img src="{{ coll.imageURL }}" alt="Image {{ forloop.counter }}"> </a></div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
 
 

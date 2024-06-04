@@ -1,0 +1,29 @@
+{% extends 'app/main.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'app' %}">&#x2190; Continue Shopping</a>
+            <br><br>
+            <h3>{{message}}</h3>
+            <div class="gallery">
+                {% for item in interaction_history_items %}
+                <div class="gallery-item">
+                    <a href="{% url 'product_detail' item.product.id %}">
+                        <img class="gallery-image" src="{{ item.product.imageURL }}" alt="{{ item.product.name }}">
+                    </a>
+                    <div class="gallery-item-info">
+                        <form method="POST" action="{% url 'remove_from_history' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

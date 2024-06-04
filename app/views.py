@@ -11,21 +11,36 @@ from django.views.decorators.csrf import csrf_exempt
 from .utils import *
 from fuzzywuzzy import process
 
+
+
 def app(request):
     customer=None
+    Is_history = False
+    recommendations_NMF = []
     if request.user.is_authenticated:
         customer = request.user.customer
+        target_customer_id = customer.id
         cart, created = Cart.objects.get_or_create(customer=customer)
         items = cart.cartitem_set.all()
         cartItems= cart.get_cart_items
+
+        TARGET_interaction_history = InteractionHistory.objects.filter(customer=customer)
+        Is_history = TARGET_interaction_history.exists()
+
+        if Is_history:
+            customers = Customer.objects.all()
+            products = Product.objects.all()
+            all_interaction_history = InteractionHistory.objects.all()
+            recommendations_NMF= get_recommendations_NMF(target_customer_id, customers,products, all_interaction_history )
     else:
         items = []
         cart = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems= cart['get_cart_items']
 
     products = Product.objects.all()
-    context = { 'products': products, 'cartItems': cartItems, 'customer':customer}
+    context = { 'products': products, 'cartItems': cartItems, 'customer':customer, 'recommendations_NMF':recommendations_NMF, 'Is_history': Is_history}
     return render(request, 'app/app.html', context)
+
 
 
 def cart(request):
@@ -92,8 +107,12 @@ def updateItem(request):
 def product_detail(request, id):
     customer=None
     product = get_object_or_404(Product, id=id)
+    all_interaction_history = InteractionHistory.objects.all()
+
+
     similar_products_content = get_similar_products_content_based(product)
     similar_products_tfidf = get_similar_produc_tfidf(product)
+    similar_products_collaborative=get_recommendations_collaborative_item_item(product, all_interaction_history, Customer.objects.all(), Product.objects.all())
 
 
     if request.user.is_authenticated:
@@ -101,6 +120,8 @@ def product_detail(request, id):
         cart, created = Cart.objects.get_or_create(customer=customer)
         all_products = Product.objects.all()
         cartItems= cart.get_cart_items
+      #  InteractionHistory.objects.create(customer=customer, product=product)
+        InteractionHistory.objects.get_or_create(customer=customer, product=product)
     else:
         all_products = Product.objects.all()
         cart = {'get_cart_total': 0, 'get_cart_items': 0}
@@ -111,6 +132,7 @@ def product_detail(request, id):
         'all_products': all_products,
         'related_products': similar_products_content,
         'related_products_tfidf': similar_products_tfidf,
+        'related_products_collaborative': similar_products_collaborative,
         'cartItems': cartItems,
         'customer':customer
     }
@@ -240,3 +262,32 @@ def search(request):
     }
 
     return render(request, 'app/search_results.html', context)
+
+
+# INTERACTION HISTORY----------------------------------------------------------------------------------------------------
+
+def view_history(request):
+   # wishlist = None
+    customer=None
+
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        interaction_history = InteractionHistory.objects.filter(customer=customer)
+        cart, created = Cart.objects.get_or_create(customer=customer)
+        cartItems = cart.get_cart_items
+        message=""
+    else:
+        items = []
+        cart = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = cart['get_cart_items']
+        message="Please login to use wishlist"
+
+    context = { 'customer':customer, 'message':message, 'cartItems': cartItems, 'interaction_history_items': interaction_history}
+    return render(request, 'app/interaction_history.html', context)
+
+
+def remove_from_history(request, item_id):
+    item = get_object_or_404(InteractionHistory, id=item_id)
+    if request.method == "POST":
+        item.delete()
+        return redirect('view_history')

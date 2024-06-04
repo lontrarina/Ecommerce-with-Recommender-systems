@@ -236,3 +236,27 @@ form.register-form input[type="email"]:focus {
     border-color: #f1b0b7; /* Трохи темніший відтінок при фокусі */
     box-shadow: 0 0 5px rgba(245, 198, 203, 0.5);
 }
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Вирівнювання елементів зліва */
+}
+
+.gallery-item {
+    margin: 10px;
+    text-align: center; /* Вирівнювання тексту зліва */
+    max-width: 200px;
+}
+
+.gallery-image {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.gallery-item-info {
+    margin-top: 10px;
+}

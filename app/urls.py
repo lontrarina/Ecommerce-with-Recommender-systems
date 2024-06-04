@@ -19,6 +19,9 @@ urlpatterns = [
     path('update_wishlist/', views.update_wishlist, name="update_wishlist"),
 
     path('search/', views.search, name='search'),
+
+    path('history/', views.view_history, name='view_history'),
+    path('remove_from_history/<int:item_id>/', views.remove_from_history, name='remove_from_history'),
   
 
 
