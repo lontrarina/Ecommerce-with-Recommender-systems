@@ -45,20 +45,48 @@ def app(request):
 
 def cart(request):
     customer=None
+    recommendations = []
+    Is_history = False
+    Is_cart_items = False
+
     if request.user.is_authenticated:
         customer = request.user.customer
         cart, created = Cart.objects.get_or_create(customer=customer)
         items = cart.cartitem_set.all()
         cartItems= cart.get_cart_items
         message=""
+
+        TARGET_interaction_history = InteractionHistory.objects.filter(customer=customer)
+        TARGET_cart = CartItem.objects.filter( cart=cart)
+        Is_history = TARGET_interaction_history.exists()
+        Is_cart_items = TARGET_cart.exists()
+
+        if Is_history and Is_cart_items:
+            interaction_history = InteractionHistory.objects.all()
+            target_customer_id=customer.id
+            customers = Customer.objects.all()
+            products = Product.objects.all()
+            
+            #recommendations= get_recommendations_collaborative_user_user(target_customer_id, customers, products, interaction_history, wishlist_items)
+            recommendations= get_recommendations_NMF(target_customer_id, customers, products, interaction_history, n_recommendations=10)
+ 
     else:
         items = []
         cart = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems= cart['get_cart_items']
         message="Please login to use cart"
 
-    context = { 'items': items, 'cart': cart, 'cartItems': cartItems, 'customer':customer, 'message':message}
+    context = { 'items': items,
+                'cart': cart,
+                'cartItems': cartItems,
+                'customer':customer, 
+                'message':message,
+                'recommendations':recommendations,
+                'Is_history': Is_history,
+                'Is_cart_items': Is_cart_items
+                }
     return render(request, 'app/cart.html', context)
+
 
 def checkout(request):
     customer=None
@@ -182,23 +210,47 @@ def logout_view(request):
 def wishlist(request):
     wishlist = None
     customer=None
+    recommendations = []
+    Is_history = False
+    Is_wishlist_items = False
+    
 
     if request.user.is_authenticated:
         customer = request.user.customer
         wishlist, created = Wishlist.objects.get_or_create(customer=customer)
-        items = wishlist.wishlistitem_set.all()
+        wishlist_items = wishlist.wishlistitem_set.all()
         cart, created = Cart.objects.get_or_create(customer=customer)
         cartItems = cart.get_cart_items
         message=""
+        TARGET_interaction_history = InteractionHistory.objects.filter(customer=customer)
+        TARGET_wish = WishlistItem.objects.filter(wishlist=wishlist)
+        Is_history = TARGET_interaction_history.exists()
+        Is_wishlist_items = TARGET_wish.exists()
+
+        if Is_history and Is_wishlist_items:
+            interaction_history = InteractionHistory.objects.all()
+            target_customer_id=customer.id
+            customers = Customer.objects.all()
+            products = Product.objects.all()
+            
+            #recommendations= get_recommendations_collaborative_user_user(target_customer_id, customers, products, interaction_history, wishlist_items)
+            recommendations= get_recommendations_NMF(target_customer_id, customers, products, interaction_history, n_recommendations=10)
     else:
-        items = []
+        wishlist_items = []
         cart = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems = cart['get_cart_items']
         message="Please login to use wishlist"
 
-    context = { 'items': items, 'wishlist': wishlist, 'customer':customer, 'message':message, 'cartItems': cartItems,}
+    context = { 'items': wishlist_items,
+                'wishlist': wishlist, 
+                'customer':customer, 
+                'message':message, 
+                'cartItems': cartItems, 
+                'recommendations':recommendations,
+                'Is_history': Is_history,
+                'Is_wishlist_items': Is_wishlist_items
+                }
     return render(request, 'app/wishlist.html', context)
-
 
 def remove_from_wishlist(request, item_id):
     item = get_object_or_404(WishlistItem, id=item_id)

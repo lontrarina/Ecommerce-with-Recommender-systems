@@ -194,3 +194,34 @@ def create_sparse_matrix(interaction_history, customers, products):
     interaction_matrix_csr = csr_matrix(interaction_matrix.values)
     return interaction_matrix_csr, interaction_matrix
 
+
+# def get_recommendations_collaborative_user_user(target_customer_id, customers, products, interaction_history, n_recommendations=10, k=10, metric='cosine'):
+#     interaction_matrix_csr, interaction_matrix = create_sparse_matrix(interaction_history, customers, products)
+
+#     user_mapper = {user_id: idx for idx, user_id in enumerate(interaction_matrix.index)}
+#     item_mapper = {item_id: idx for idx, item_id in enumerate(interaction_matrix.columns)}
+#     user_inv_mapper = {v: k for k, v in user_mapper.items()}
+
+#     # Transpose the interaction matrix for item-item similarity
+#     interaction_matrix_csr = interaction_matrix_csr.T
+
+#     # Get the product index
+#     user_id = user_mapper[target_customer_id]
+#     user_vec = interaction_matrix_csr[user_id ]
+
+#     if isinstance(user_vec, (np.ndarray)):
+#         user_vec = user_vec.reshape(1, -1)
+
+#     # Use k+1 since kNN output includes the itemId of interest
+#     kNN = NearestNeighbors(n_neighbors=k+1, algorithm="brute", metric=metric)
+#     kNN.fit(interaction_matrix_csr)
+
+#     # Find k-nearest neighbors
+#     neighbour = kNN.kneighbors(user_vec, return_distance=False)
+#     neighbour_ids = [user_inv_mapper[neighbour.item(i)] for i in range(1, k+1)]
+
+#     # Get the top n recommendations
+#     # Get the top n recommendations
+#     recommendations_ids = neighbour_ids[:n_recommendations]
+#     return Product.objects.filter(id__in=recommendations_ids)
+

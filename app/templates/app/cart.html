@@ -46,6 +46,19 @@
                 {% endfor %}
         </div>
         <br><br>
+        {% if customer %}
+                {% if Is_history and Is_cart_items %}
+                <br> <br>
+                <h1 style="margin-left: 40px;">You might be interested in:</h1>
+                    <div class="content">
+                        <div class="slider multiple-items">
+                            {% for rec in recommendations %}
+                            <div class="slider-margin"><a href="{% url 'product_detail' rec.id %}"><img src="{{ rec.imageURL }}" alt="Image {{ forloop.counter }}"></a></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+        {% endif %}
         <h3>{{message}}</h3>
     </div>
 {% endblock content %}
