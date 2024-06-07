@@ -1,7 +1,5 @@
 
 {% extends 'app/main.html' %}
-
-
 {% block content %}
 
 <div class="row">
@@ -40,7 +38,7 @@
             {% if customer %}
                 {% if Is_history and Is_wishlist_items %}
                 <br> <br>
-                <h1 style="margin-left: 40px;">You might be interested in:</h1>
+                <h3 style="margin-left: 40px; background-color: rgb(243, 193, 237);">You might be interested in:</h3>
                     <div class="content">
                         <div class="slider multiple-items">
                             {% for rec in recommendations %}
