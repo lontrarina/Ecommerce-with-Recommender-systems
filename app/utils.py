@@ -1,15 +1,13 @@
 from .models import Product
 import pandas as pd
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.decomposition import NMF
-from scipy.sparse import csr_matrix
 from sklearn.neighbors import NearestNeighbors
+from sklearn.metrics import mean_squared_error
+from scipy.sparse import csr_matrix
 
 
 
@@ -100,7 +98,7 @@ def get_similar_produc_tfidf(product, n_recommendations=7):
     return similar_products
 
 
-def get_recommendations_NMF(target_customer_id, customers, products, interaction_history, n_recommendations=10):
+def get_recommendations_NMF(target_customer_id, customers, products, interaction_history, n_recommendations=20):
     # Завантажте дані з InteractionHistory, Customer та Product
 
     # Перетворіть DataFrame в розріджену матрицю
@@ -131,10 +129,49 @@ def get_recommendations_NMF(target_customer_id, customers, products, interaction
         print(f"Customer ID {target_customer_id} not found in recommendations.")
         return []
 
+    # Видалення з рекомендацій товарів, які вже переглядав поточний користувач
+    viewed_products = interaction_history.filter(customer=target_customer_id).values_list('product', flat=True)
+    recommended_product_ids = [pid for pid in recommendations[target_customer_id] if pid not in viewed_products]
+
+
+    evaluate_recommendation_system(interaction_matrix, predicted_ratings_df,  n_recommendations)
+
     # Поверніть рекомендації для цільового користувача
-    recommended_product_ids = recommendations[target_customer_id]
     return Product.objects.filter(id__in=recommended_product_ids)
 
+
+def evaluate_recommendation_system(interaction_matrix, predicted_ratings_df, n_recommendations):
+    recalls = []
+    precisions = []
+    rmses = []
+
+    for target_customer_id in interaction_matrix.index:
+        viewed_products = np.where(interaction_matrix.loc[target_customer_id] == 1)[0]
+        recommended_products = predicted_ratings_df.loc[target_customer_id].nlargest(n_recommendations).index.tolist()
+
+        true_positives = len(set(viewed_products) & set(recommended_products))
+        false_negatives = len(viewed_products) - true_positives
+        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
+        precision = true_positives / n_recommendations
+
+        actual_ratings = interaction_matrix.loc[target_customer_id, recommended_products].values
+        predicted_ratings = predicted_ratings_df.loc[target_customer_id, recommended_products].values
+        rmse = np.sqrt(mean_squared_error(actual_ratings, predicted_ratings))
+
+        recalls.append(recall)
+        precisions.append(precision)
+        rmses.append(rmse)
+
+    # Обчислити середнє значення кожної метрики
+    avg_recall = np.mean(recalls)
+    avg_precision = np.mean(precisions)
+    avg_rmse = np.mean(rmses)
+
+    # Вивести оцінки на консоль
+    print("-----------------------------------------------------Оцінки точності системи-----------------------------")
+    print("Середній RMSE:", avg_rmse)
+    print("Середній Recall:", avg_recall)
+    print("Середня Precision:", avg_precision)
 
 def get_recommendations_collaborative_item_item(product, interaction_history, customers, products, k=10, metric='cosine', n_recommendations=10):
     # Створіть DataFrame з історією взаємодій
@@ -166,6 +203,12 @@ def get_recommendations_collaborative_item_item(product, interaction_history, cu
     # Get the top n recommendations
     recommendations_ids = neighbour_ids[:n_recommendations]
 
+    for i in recommendations_ids:
+        if i == product.id:
+            recommendations_ids.remove(i)
+            break
+
+
     return Product.objects.filter(id__in=recommendations_ids)
     
 
@@ -193,6 +236,10 @@ def create_sparse_matrix(interaction_history, customers, products):
     # Перетворіть DataFrame в розріджену матрицю
     interaction_matrix_csr = csr_matrix(interaction_matrix.values)
     return interaction_matrix_csr, interaction_matrix
+
+
+
+
 
 
 # def get_recommendations_collaborative_user_user(target_customer_id, customers, products, interaction_history, n_recommendations=10, k=10, metric='cosine'):
